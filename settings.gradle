@@ -1,4 +1,0 @@
-include 'products'
-include 'payment'
-include 'imagescaler'
-include 'orders'
