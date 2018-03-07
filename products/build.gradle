@@ -1,3 +1,6 @@
+import jp.classmethod.aws.gradle.s3.AmazonS3FileUploadTask
+import jp.classmethod.aws.gradle.s3.SyncTask;
+
 buildscript {
 	ext {
 		springBootVersion = "1.5.8.RELEASE"
@@ -8,11 +11,13 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("jp.classmethod.aws:gradle-aws-plugin:0.30")
 	}
 }
 
 apply plugin: "java"
 apply plugin: "org.springframework.boot"
+apply plugin: "jp.classmethod.aws.s3"
 
 group = "de.inovex.training.whiskystore"
 version = "0.0.1-SNAPSHOT"
@@ -38,3 +43,24 @@ dependencies {
     )
 }
 
+aws {
+	profileName = "javaland"
+	region = "eu-central-1"
+}
+
+task uploadToS3(type: AmazonS3FileUploadTask, dependsOn: build) {
+	overwrite true
+	file jar.archivePath
+	bucketName "javaland-whiskystore-terraform"
+	key "${userPrefix}/jars/products/${jar.archiveName}"
+}
+
+task copyImagesToS3(type: SyncTask) {
+	source file("src/main/resources/images") // must be directory
+	bucketName "${userPrefix}-whiskystore-images"
+	prefix "inbox/"
+}
+
+task buildAndDeploy(type: GradleBuild) {
+	tasks = ['clean', 'uploadToS3', 'deploy']
+}
