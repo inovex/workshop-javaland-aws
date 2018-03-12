@@ -6,26 +6,26 @@
   * Create access key
   * Datei `~/.aws/credentials` anlegen:
 
-        ```shell
+        ```sh
         [javaland]
         aws_access_key_id=<your-access-key-id>
         aws_secret_access_key=<your-secret-access-key>
         ```
   * Alternative Env-Variablen:
 
-        ```shell
+        ```sh
         export AWS_ACCESS_KEY_ID=<your-access-key-id>
         export AWS_SECRET_ACCESS_KEY=<your-secret-access-key>
         ```
 * Projekt bauen und in S3 Bucket hochladen:
 
-      ```shell
+      ```sh
       export TF_VAR_prefix <your-user-name>
       ./gradlew clean uploadToS3
       ```
 * Terraform initialisieren und ausführen
      
-      ```shell
+      ```sh
       cd terraform
       export TF_VAR_prefix <your-user-name>
       terraform init
@@ -44,24 +44,24 @@
     ```
 * Service aufrufen:
 
-      ```shell
+      ```sh
       curl "http://<elb-endpoint>/products"
       ```
 * Image Scaler einrichten (siehe `imagescaler`)
 * Bildernamen abrufen (mit leerem Ergebnis):
 
-      ```shell
+      ```sh
       curl "http://<elb-endpoint>/products/1/images" --> leeres Ergebnis
       ```
 * Bilder in S3 Bucket hochladen:
 
-      ```shell
+      ```sh
       cd ..
       ./gradlew copyImagesToS3
       ... kurz warten, bis die Lambda getriggert wurde ...
       ```
 * Bildernamen abrufen:
 
-      ```shell
+      ```sh
       curl "http://<elb-endpoint>/products/1/images" --> Dateinamen
       ```
